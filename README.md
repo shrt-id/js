@@ -23,9 +23,9 @@ const { ShortId, shrtId } = require("shrt-id");
 Simple use
 
 ```js
-const id = shrtId(); // default length is 8
+const id = shrtId(); // default length is 9
 console.log(id);
-// ev60bb7Q
+// ev60bb7QX
 ```
 
 Custom length

@@ -1,12 +1,14 @@
+var crypto = require("crypto");
+
 class ShortId {
   constructor(shard = 60, startDate = undefined) {
     this.shard = shard;
     this.startDate = startDate != undefined ? startDate : new Date(2010, 1, 1);
-    this.startDateTimestampBlock = this.startDate.getTime() / 100;
+    this.startDateTimestampBlock = this.startDate.getTime();
     this.alpha =
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
     this.alphaLen = this.alpha.length;
-    this.DEFALT_LENGTH = 8;
+    this.DEFALT_LENGTH = 10;
   }
 
   divmod = (x, y) => [Math.floor(x / y), x % y];
@@ -31,27 +33,30 @@ class ShortId {
   }
 
   intFromDatetime = () => {
-    const _dt = Math.round(
-      (new Date().getTime() - this.startDate.getTime()) / 100
-    );
+    const _dt = Math.round(new Date().getTime() - this.startDate.getTime());
     return _dt;
   };
 
-  randomString(l) {
-    let result = "";
-    while (l) {
-      let ridx = Math.floor(Math.random() * this.alphaLen);
-      l -= 1;
-      result += this.alpha[ridx];
+  randomString(length) {
+    const randomBytes = crypto.randomBytes(length);
+    let result = new Array(length);
+
+    let cursor = 0;
+    for (let i = 0; i < length; i++) {
+      cursor += randomBytes[i];
+      result[i] = this.alpha[cursor % this.alphaLen];
     }
-    return result;
+
+    return result.join("");
   }
 
   id = (l = this.DEFALT_LENGTH) => {
     let randStringLen, _id;
     const timtString = this.intToString(this.intFromDatetime());
 
-    if (l < 7) {
+    console.log(timtString);
+
+    if (l < 9) {
       randStringLen = 2;
     } else {
       randStringLen = l - timtString.length;
@@ -60,7 +65,7 @@ class ShortId {
     let randString = this.randomString(randStringLen);
     _id = timtString + randString;
 
-    if (l < 7) {
+    if (l < 9) {
       _id = _id.slice(-l);
     }
     return _id;
@@ -76,10 +81,10 @@ class ShortId {
   decode(id) {
     let timeString, _dt, dt, randomString, _shardString, shardSeq;
 
-    if (id.length >= 7) {
-      timeString = id.slice(0, 6);
+    if (id.length >= 9) {
+      timeString = id.slice(0, 7);
       _dt = this.stringToInt(timeString) + this.startDateTimestampBlock;
-      dt = new Date(_dt * 100);
+      dt = new Date(_dt);
       randomString = id.slice(timeString.length);
     } else {
       randomString = id.slice(-2);
@@ -99,5 +104,7 @@ class ShortId {
   }
 }
 
-module.exports.shrtId = new ShortId().id;
-module.exports.ShortId = ShortId;
+console.log(new ShortId().decode(new ShortId().id()));
+
+// module.exports.shrtId = new ShortId().id;
+// module.exports.ShortId = ShortId;

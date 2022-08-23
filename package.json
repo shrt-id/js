@@ -1,6 +1,6 @@
 {
   "name": "shrt-id",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Short Id for javascript",
   "main": "index.js",
   "scripts": {

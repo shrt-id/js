@@ -104,7 +104,7 @@ class ShortId {
   }
 }
 
-console.log(new ShortId().decode(new ShortId().id()));
+// console.log(new ShortId().decode(new ShortId().id()));
 
-// module.exports.shrtId = new ShortId().id;
-// module.exports.ShortId = ShortId;
+module.exports.shrtId = new ShortId().id;
+module.exports.ShortId = ShortId;

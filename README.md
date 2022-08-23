@@ -31,9 +31,9 @@ console.log(id);
 Custom length
 
 ```js
-const id = shrtId(10)
-console.log(id)
-# wiwdhx8V7x
+const id = shrtId(10);
+console.log(id);
+// wiwdhx8V7x
 ```
 
 Get Id and shard at same time
